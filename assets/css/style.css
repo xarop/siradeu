@@ -3455,6 +3455,7 @@ a:hover {
 
 .navbar-brand h1 {
   color: #EC4782;
+  font-weight: bolder;
   margin: 10px;
 }
 
@@ -4858,6 +4859,7 @@ p.form-message.error.form-message.error {
 
 .footer-area h2 {
   color: #EC4782;
+  font-weight: bolder;
   margin-top: 1rem;
 }
 
@@ -5018,8 +5020,3 @@ p.form-message.error.form-message.error {
   background-image: url("../images/portfolio/sala.jpg");
 }
 /*# sourceMappingURL=style.css.map */
-
-
-.eapps-instagram-feed-title, .eapps-link {
-  display: none !important;
-}
