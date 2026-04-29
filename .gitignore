@@ -2,3 +2,4 @@
 .vscode/sftp_CDMON.json
 .vscode/sftp_sw.json
 .vscode/sftp.json
+*.vscode
