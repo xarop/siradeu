@@ -1,19 +1,19 @@
 # Siradeu.com
 
-Bienvenido al repositorio de la web [siradeu.com](https://siradeu.com)
+Benvingut al repositori de la web [siradeu.com](https://siradeu.com)
 
-## Descripción
-Este repositorio contiene el código fuente y los recursos de la página web de Siradeu.
+## Descripció
+Aquest repositori conté el codi font i els recursos de la pàgina web de Siradeu.
 
-## Estructura del proyecto
-- **index.html, firma.html, sprite.html**: Archivos principales HTML.
-- **assets/**: Recursos estáticos como CSS, JS, imágenes y fuentes.
-- **cal/, cam/, tarifes/**: Subsitios o secciones independientes con su propio `index.html`.
-- **fotos/**: Galería de imágenes y administración.
-- **wordpress/**: Instalación de WordPress (si aplica).
+## Estructura del projecte
+- **index.html, firma.html, sprite.html**: Arxius principals HTML.
+- **assets/**: Recursos estàtics com CSS, JS, imatges i tipografies.
+- **cal/, cam/, tarifes/**: Subllocs o seccions independents amb el seu propi `index.html`.
+- **fotos/**: Galeria d’imatges i administració.
+- **wordpress/**: Instal·lació de WordPress (si escau).
 
-## Cómo ver la web
-Puedes visitar la web en producción en: [https://siradeu.com](https://siradeu.com)
+## Com veure la web
+Pots visitar la web en producció a: [https://siradeu.com](https://siradeu.com)
 
-## Licencia
-Este proyecto es privado. Todos los derechos reservados.
+## Llicència
+Aquest projecte és privat. Tots els drets reservats.
