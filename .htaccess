@@ -2,3 +2,41 @@ RewriteEngine On
 RewriteCond %{HTTPS} !=on
 RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301,NE]
 Header always set Content-Security-Policy "upgrade-insecure-requests;"
+
+# ---- Bloqueja l'accés directe a fitxers sensibles ----
+# (.htaccess permet bloquejar; si el servidor no el processa, caldria
+#  configurar-ho al panell de control. És defensa en profunditat: la
+#  neteja real dels fitxers al servidor i la reescriptura de l'historial
+#  Git són igualment obligatòries.)
+
+#Cap fitxer ocult (.git, .env, .htpasswd, .ftp-deploy-sync-state.json, ...)
+<FilesMatch "^\.">
+  Require all denied
+</FilesMatch>
+
+#Configuració de WordPress i altres fitxers de configuració
+<FilesMatch "(^|/)(wp-config(-[a-zA-Z0-9_-]+)?\.php|wp-config.*\.bak|\.htpasswd|\.netrc|\.npmrc|credentials\.json|secrets\.json)$">
+  Require all denied
+</FilesMatch>
+
+#Logs, còpies de seguretat, claus i volcats de base de dades
+<FilesMatch "\.(log|bak|orig|rej|sql|sql\.gz|pem|key|crt|p12|pfx)$">
+  Require all denied
+</FilesMatch>
+
+#Claus privades i fitxers de configuració per entorn
+<FilesMatch "(^|/)(id_rsa|id_ed25519|\.env|\.env\..*)$">
+  Require all denied
+</FilesMatch>
+
+#Cap al directori .git ni al codi font
+RedirectMatch 404 /\.git
+RedirectMatch 404 /\.github
+RedirectMatch 404 /\.vscode
+RedirectMatch 404 /src/
+RedirectMatch 404 /dist/
+
+#Cap fitxer PHP directament (WordPress hauria de servir-se'ls)
+<FilesMatch "\.php$">
+  Require all denied
+</FilesMatch>
