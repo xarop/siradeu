@@ -66,6 +66,10 @@ Thumbs.db
 .ftp-deploy-sync-state.json
 .ftp-deploy-sync-state*.json
 
+#Token d'autenticació de la càmera (es crea localment, mai es versiona)
+cam/token.js
+cam/.env
+
 #Caches
 .cache/
 .phpunit.result.cache

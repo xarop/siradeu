@@ -59,6 +59,7 @@ jobs:
             **/.DS_Store
             **/.env
             **/.env.*
+            **/cam/token.js
             **/.htpasswd
             **/.htaccess.bak
             **/*.log
