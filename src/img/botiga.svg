@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800" width="1200" height="800" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Botiga efímera a Verdi 85">
+<defs>
+<linearGradient id="a" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#F5E9DC"/><stop offset="1" stop-color="#EADCC8"/></linearGradient>
+<linearGradient id="b" x1="0" y1="0" x2="0.6" y2="1"><stop offset="0" stop-color="#C89662" stop-opacity="0.95"/><stop offset="1" stop-color="#2D5A40" stop-opacity="0.55"/></linearGradient>
+</defs>
+<rect width="1200" height="800" fill="url(#a)"/>
+<rect width="1200" height="46" fill="#EADCC8" opacity="0.6"/>
+<g fill="none" stroke="#C89662" stroke-width="10" opacity="0.45">
+<path d="M70 640V330a80 80 0 0 1 160 0v310"/><path d="M310 640V330a80 80 0 0 1 160 0v310"/>
+<path d="M550 640V330a80 80 0 0 1 160 0v310"/><path d="M790 640V330a80 80 0 0 1 160 0v310"/>
+<path d="M1030 640V330a80 80 0 0 1 160 0v310"/></g>
+<g fill="url(#b)">
+<rect x="80" y="360" width="140" height="270" rx="4"/><rect x="320" y="360" width="140" height="270" rx="4"/>
+<rect x="560" y="360" width="140" height="270" rx="4"/><rect x="800" y="360" width="140" height="270" rx="4"/>
+<rect x="1040" y="360" width="140" height="270" rx="4"/></g>
+<g stroke="#C89662" stroke-width="6" opacity="0.4">
+<line x1="80" y1="480" x2="220" y2="480"/><line x1="320" y1="480" x2="460" y2="480"/>
+<line x1="560" y1="480" x2="700" y2="480"/><line x1="800" y1="480" x2="940" y2="480"/>
+<line x1="1040" y1="480" x2="1180" y2="480"/></g>
+<rect y="640" width="1200" height="160" fill="#EADCC8" opacity="0.85"/>
+<g fill="#C89662" opacity="0.3"><circle cx="150" cy="700" r="46"/><circle cx="1060" cy="712" r="38"/></g>
+<g fill="none" stroke="#2D5A40" stroke-width="9" opacity="0.75"><rect x="470" y="596" width="270" height="204"/><line x1="605" y1="596" x2="605" y2="800"/></g>
+<rect x="24" y="24" width="1152" height="752" fill="none" stroke="#2D5A40" stroke-width="3" opacity="0.25"/>
+</svg>

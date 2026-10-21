@@ -1,0 +1,49 @@
+name: Deploy preview 2026 via SFTP to xarop.com
+
+# Publica la versió nova (2026) com a PREVISIO a /2026/.
+# El lloc actual continua servint-se des de la arrel del servidor.
+
+on:
+  push:
+    branches:
+      - 2026
+  workflow_dispatch:
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    environment: xarop.com
+    env:
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Build site
+        run: >
+          python3 src/tools/build.py
+          --out dist
+          --check
+          --base-url https://siradeu.com/2026/
+          --robots "noindex, nofollow"
+
+      - name: Upload preview via FTP
+        # Mateixa acció que el flux legacy (deploy.yml): les mateixes
+        # credencials i el mateix protocol. 'rm' NO s'activa mai, així que
+        # el directori 2026/ no s'esborra en desplegar.
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.4
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          local-dir: dist/
+          server-dir: /web/sira10/2026/
+          exclude: |
+            **/.git*
+            **/.github*
+            **/README.md
