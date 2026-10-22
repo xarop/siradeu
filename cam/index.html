@@ -10,6 +10,12 @@
 
 <body>
     <img id="jpeg_0" width="1280" height="720">
+
+    <!-- El token es carrega des d'un fitxer local NO versionat (cam/token.js).
+         Si no existeix, el navegador el reporta com a 404 i es fa servir el
+         valor de reserva de sota. -->
+    <script src="token.js"></script>
+
     <script type="text/javascript">
         var camera_0 = {
             addEvent: function(elem, event, func ){

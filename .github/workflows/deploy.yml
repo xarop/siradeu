@@ -59,6 +59,8 @@ jobs:
             **/.DS_Store
             **/.env
             **/.env.*
+            # El token de la càmera es puja a mà al servidor (és un secret) i
+            # el deploy NUNCA l'ha de sobreescriure ni esborrar.
             **/cam/token.js
             **/.htpasswd
             **/.htaccess.bak

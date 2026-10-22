@@ -69,6 +69,8 @@ Thumbs.db
 #Token d'autenticació de la càmera (es crea localment, mai es versiona)
 cam/token.js
 cam/.env
+#Plantilla del token: sí que es versiona, per documentar com crear-lo
+!cam/token.js.example
 
 #Caches
 .cache/
