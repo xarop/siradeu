@@ -10,6 +10,12 @@
 
 <body>
     <img id="jpeg_0" width="1280" height="720">
+
+    <!-- El token es carrega des d'un fitxer local NO versionat (cam/token.js).
+         Si no existeix, el navegador el reporta com a 404 i es fa servir el
+         valor de reserva de sota. -->
+    <script src="token.js"></script>
+
     <script type="text/javascript">
         var camera_0 = {
             addEvent: function(elem, event, func ){
@@ -26,8 +32,12 @@
                 jpeg.src = serverUrl+"/Jpeg/"+id+"?authToken="+token+"&"+new Date().getTime();
             }
         }
-    
-    camera_0.initCamera(jpeg_0, "http://127.0.0.1:8100", "REDACTED_CAMERA_TOKEN", 0, 40);
+
+      // El token d'autenticació de la càmera NO es versiona: es llegeix del
+      // fitxer local `cam/token.js` (ignorat per Git i exclòs del deploy).
+      // Crea'l amb:  window.cameraToken = "el-teu-token";
+      window.cameraToken = window.cameraToken || "REPLACE_WITH_YOUR_CAMERA_TOKEN";
+      camera_0.initCamera(jpeg_0, "http://127.0.0.1:8100", window.cameraToken, 0, 40);
     </script>
     
 

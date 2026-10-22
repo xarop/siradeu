@@ -1,4 +1,91 @@
 RewriteEngine On
 RewriteCond %{HTTPS} !=on
 RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301,NE]
-Header always set Content-Security-Policy "upgrade-insecure-requests;"
+<IfModule mod_headers.c>
+  Header always set Content-Security-Policy "upgrade-insecure-requests;"
+</IfModule>
+
+#WordPress (i molts llocs) necessiten que index.php serveixi els directoris.
+#Sense això, /wp-admin/ retorna 404 enlloc de mostrar el tauler.
+<IfModule mod_dir.c>
+  DirectoryIndex index.php index.html
+</IfModule>
+
+# ---- Bloqueja l'accés directe a fitxers sensibles ----
+# (.htaccess permet bloquejar; si el servidor no el processa, caldria
+#  configurar-ho al panell de control. És defensa en profunditat: la
+#  neteja real dels fitxers al servidor i la reescriptura de l'historial
+#  Git són igualment obligatòries.)
+#
+# Els blocs de dalt usen <IfModule> per funcionar TAN a Apache 2.2
+# (Order/Deny) com a Apache 2.4 (Require), que és el que fa la majoria
+# d'hostatjaments actuals.
+
+#Cap fitxer ocult (.git, .env, .htpasswd, .ftp-deploy-sync-state.json, ...)
+#S'exceptua .well-known/, que serveix els reptes de renovació de certificat.
+<FilesMatch "^\.(?!well-known)">
+  <IfModule mod_authz_core.c>
+    Require all denied
+  </IfModule>
+  <IfModule !mod_authz_core.c>
+    Order allow,deny
+    Deny from all
+  </IfModule>
+</FilesMatch>
+
+#Configuració de WordPress i altres fitxers de configuració
+<FilesMatch "(^|/)(wp-config(-[a-zA-Z0-9_-]+)?\.php|wp-config.*\.bak|\.htpasswd|\.netrc|\.npmrc|credentials\.json|secrets\.json)$">
+  <IfModule mod_authz_core.c>
+    Require all denied
+  </IfModule>
+  <IfModule !mod_authz_core.c>
+    Order allow,deny
+    Deny from all
+  </IfModule>
+</FilesMatch>
+
+#Logs, còpies de seguretat, claus i volcats de base de dades
+<FilesMatch "\.(log|bak|orig|rej|sql|sql\.gz|pem|key|crt|p12|pfx)$">
+  <IfModule mod_authz_core.c>
+    Require all denied
+  </IfModule>
+  <IfModule !mod_authz_core.c>
+    Order allow,deny
+    Deny from all
+  </IfModule>
+</FilesMatch>
+
+#Claus privades i fitxers de configuració per entorn
+<FilesMatch "(^|/)(id_rsa|id_ed25519|\.env|\.env\..*)$">
+  <IfModule mod_authz_core.c>
+    Require all denied
+  </IfModule>
+  <IfModule !mod_authz_core.c>
+    Order allow,deny
+    Deny from all
+  </IfModule>
+</FilesMatch>
+
+#Cap als directoris de control de versions i al codi font.
+#S'ancora al inici del camí per no afectar URLs del lloc que continguin
+#aquestes paraules.
+RedirectMatch 404 "^/\.git(/|$)"
+RedirectMatch 404 "^/\.github(/|$)"
+RedirectMatch 404 "^/\.vscode(/|$)"
+RedirectMatch 404 "^/src(/|$)"
+RedirectMatch 404 "^/dist(/|$)"
+
+#Cap als fitxers PHP "sosting" que no haurien de ser accessibles
+#directament. Cal ser conservador: WordPress (wp-login.php, wp-admin/,
+#index.php) i els formularis del lloc (assets/contact.php, fotos/index.php)
+#necessiten PHP. Només es bloquegen els que no s'han de servir com a script.
+#xmlrpc.php es tanca perquè és un vector d'abús conegut.
+<FilesMatch "^(xmlrpc\.php)$">
+  <IfModule mod_authz_core.c>
+    Require all denied
+  </IfModule>
+  <IfModule !mod_authz_core.c>
+    Order allow,deny
+    Deny from all
+  </IfModule>
+</FilesMatch>

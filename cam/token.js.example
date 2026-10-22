@@ -1,0 +1,12 @@
+// Plantilla del token d'autenticació de la càmera.
+//
+// Copia aquest fitxer a `cam/token.js` i substitueix el valor pel token real:
+//
+//     cp cam/token.js.example cam/token.js
+//
+// `cam/token.js` està ignorat per Git i exclòs del deploy, així que el token
+// real mai s'ha de versionar ni pujar al servidor.
+//
+// El fitxer ha de definir `window.cameraToken` abans que s'executi
+// `cam/index.html`.
+window.cameraToken = "REPLACE_WITH_YOUR_CAMERA_TOKEN";
