@@ -4,6 +4,12 @@ on:
   push:
     branches:
       - main
+  workflow_dispatch:
+    inputs:
+      clean-slate:
+        description: "Neteja TOTAL el directori del servidor abans de publicar (esborra .git, .github, logs i altres arxius exposats). Deixa-ho en false un cop la neteja s'hagi fet."
+        type: boolean
+        default: false
 
 jobs:
   ftp-deploy:
@@ -23,7 +29,101 @@ jobs:
           password: ${{ secrets.FTP_PASSWORD }}
           local-dir: ./
           server-dir: /web/sira10/
+          # El fitxer d'estat es desa DINS el checkout, mai amb un camí
+          # `../`: `state-name` es concatena textualmente i un `../` permetria
+          # escriure fora del directori de treball. Com que el fitxer està a
+          # l'arrel i `exclude` el filtra, mai s'envia al servidor.
+          state-name: .ftp-deploy-sync-state.json
+          # dangerously-clean-slate es activa només a mà, quan cal netejar
+          # arxius antics exposats que l' FTP-Deploy no esborra sol.
+          dangerous-clean-slate: ${{ inputs.clean-slate }}
+          # NO s'activa `rm`: el servidor ha de conservar els directoris que
+          # no surten del repositori (per ex. 2026/, la previsió de la versió nova).
+          #
+          # ATENCIÓ: l'atenció de l'acció substitueix els seus propis valors
+          # per defecte (`**/.git*`, `**/.git*/**`, `**/node_modules/**`).
+          # Cal tornar a enumerar-los TOTS, sinó el directori .git es publica.
           exclude: |
             **/.git*
+            **/.git*/
+            **/.git*/**
             **/.github*
-            **/README.md
+            **/.github*/
+            **/.github*/**
+            **/.vscode*
+            **/.vscode*/
+            **/.vscode*/**
+            **/node_modules/**
+            **/.ftp-deploy-sync-state.json
+            **/.ftp-deploy-sync-state*.json
+            **/.DS_Store
+            **/.env
+            **/.env.*
+            # El token de la càmera es puja a mà al servidor (és un secret) i
+            # el deploy NUNCA l'ha de sobreescriure ni esborrar.
+            **/cam/token.js
+            # La plantilla tampoc no cal que sigui pública.
+            **/cam/token.js.example
+            **/.htpasswd
+            **/.htaccess.bak
+            **/*.log
+            **/*.bak
+            **/*.sql
+            **/*.sql.gz
+            **/*.md
+            **/*.pem
+            **/*.key
+            **/*.crt
+            **/id_rsa*
+            **/.npmrc
+            **/.netrc
+            **/*credentials*
+            **/*secret*
+            **/wp-config.php
+            **/wp-config-*.php
+            **/wp-config*.php.bak
+            **/wp-content/uploads/**
+            **/wp-content/cache/**
+            **/wp-content/upgrade/**
+            **/xmlrpc.php
+            wordpress/**
+            src/**
+            test-siradeu/**
+            dist/**
+            README.md
+
+      - name: Comprovar que no hi ha fitxers sensibles publicats
+        if: always()
+        run: |
+          set -u
+          urls="
+          /.git/config
+          /.git/HEAD
+          /.gitignore
+          /.github/workflows/deploy.yml
+          /.vscode/sftp.json
+          /wordpress/wp-config.php
+          /wp-config.php
+          /.ftp-deploy-sync-state.json
+          /.ftp-deploy-sync-state*.json
+          /debug.log
+          /.env
+          /src/tools/build.py
+          /dist/
+          /.gitattributes
+          /cam/token.js
+          /cam/token.js.example
+          "
+          failed=0
+          for u in $urls; do
+            code=$(curl -s -o /dev/null -w '%{http_code}' --max-time 20 "https://siradeu.com$u" || echo 000)
+            echo "$u -> $code"
+            case "$code" in
+              200|301|302) failed=1 ;;
+            esac
+          done
+          if [ "$failed" -ne 0 ]; then
+            echo "::error::Hi ha fitxers sensibles accessibles publiquement."
+            exit 1
+          fi
+          echo "Cap fitxer sensible exposat."

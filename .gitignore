@@ -2,3 +2,77 @@
 .vscode/sftp_CDMON.json
 .vscode/sftp_sw.json
 .vscode/sftp.json
+.vscode/*
+!.vscode/extensions.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/mcp.json
+*.code-workspace
+
+#.Sortida de la construcció (es genera amb src/tools/build.py)
+dist/
+
+#Codi de Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+
+#Prototip local de la versió nova; la còpia canònica és src/
+test-siradeu/
+
+# ---- Fitxers sensibles / secrets (NO han deVersionsar-se mai) ----
+#Configuració de WordPress: conté credencials de base de dades i salts
+wordpress/wp-config.php
+wordpress/wp-config-*.php
+wp-config.php
+wp-config-*.php
+*.sql
+*.sql.gz
+*.sql.bak
+
+#Secrets i entorns
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.crt
+*.p12
+*.pfx
+id_rsa*
+id_ed25519*
+.netrc
+.npmrc
+credentials.json
+secrets.json
+*credentials*.json
+*secret*.json
+
+#Logs i fitxers de depuració
+debug.log
+*.log
+logs/
+
+#Còpies de seguretat i temporals
+*.bak
+*.orig
+*.rej
+*.swp
+*~
+.DS_Store
+Thumbs.db
+
+#Estat del deploy SFTP (mai s'ha de pujar al servidor)
+.ftp-deploy-sync-state.json
+.ftp-deploy-sync-state*.json
+
+#Token d'autenticació de la càmera (es crea localment, mai es versiona)
+cam/token.js
+cam/.env
+#Plantilla del token: sí que es versiona, per documentar com crear-lo
+!cam/token.js.example
+
+#Caches
+.cache/
+.phpunit.result.cache
+*.tsbuildinfo
