@@ -92,6 +92,41 @@ jobs:
             dist/**
             README.md
 
+      - name: Comprovar que el token de la càmera no és versionat
+        if: always()
+        run: |
+          set -u
+          failed=0
+          # El token real es llegeix del servidor, mai del repositori.
+          if git ls-files --error-unmatch cam/token.js > /dev/null 2>&1; then
+            echo "::error::cam/token.js està versionat al repositori."
+            failed=1
+          else
+            echo "OK: cam/token.js no està versionat."
+          fi
+          if [ -f cam/token.js ]; then
+            echo "::error::Existeix cam/token.js dins el checkout del deploy."
+            failed=1
+          else
+            echo "OK: cam/token.js no hi és al checkout."
+          fi
+          if [ "$failed" -ne 0 ]; then
+            exit 1
+          fi
+
+      - name: Comprovar que el token de la càmera està provisionat
+        if: always()
+        run: |
+          set -u
+          # Aquest fitxer S'HA de poder llegir des del navegador: la pàgina de
+          # la càmera el carrega amb <script src="token.js">. Per tant aquí no es
+          # pot tractar com un fitxer "exposat" (vegeu el pas anterior).
+          code=$(curl -s -o /dev/null -w '%{http_code}' --max-time 20 "https://siradeu.com/cam/token.js" || echo 000)
+          echo "/cam/token.js -> $code"
+          if [ "$code" = "404" ]; then
+            echo "::warning::El token de la càmera no està provisionat al servidor. La pàgina de la càmera no funcionarà fins que el pugis a mà a /web/sira10/cam/token.js."
+          fi
+
       - name: Comprovar que no hi ha fitxers sensibles publicats
         if: always()
         run: |
@@ -111,7 +146,6 @@ jobs:
           /src/tools/build.py
           /dist/
           /.gitattributes
-          /cam/token.js
           /cam/token.js.example
           "
           failed=0
